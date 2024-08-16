@@ -1,0 +1,21 @@
+.loadBtn {
+  width: 50%;
+  height: 50px;
+  margin: 30px auto 20px;
+  text-align: center;
+  background-color: rgb(0, 192, 255);
+  border: none;
+  outline: none;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
+  transition: box-shadow 250ms ease-in-out;
+}
+
+.loadBtn:hover,
+.loadBtn:focus {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.loadBtn:active {
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+}

@@ -1,15 +1,15 @@
 import css from './App.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { MagnifyingGlass } from 'react-loader-spinner';
 import { getPhotos } from '../../api/unsplash';
-import Modal from 'react-modal';
 import SearchBar from '../SearchBar/SearchBar';
 import ImageGallery from '../ImageGallery/ImageGallery';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import ImageModal from '../ImageModal/ImageModal';
 
 export default function App() {
   const [query, setQuery] = useState(null);
-  const [prevQuery, setPrevQuery] = useState(null);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -54,7 +54,6 @@ export default function App() {
 
     setIsError(false);
     setIsLoading(true);
-    setPrevQuery(query);
 
     getPhotos(query, page)
       .then(({ total_pages = 1, results = [] }) => {
@@ -78,25 +77,21 @@ export default function App() {
 
       {images.length > 0 && <ImageGallery images={images} handleOpenModal={handleOpenModal} />}
 
-      <MagnifyingGlass
-        visible={isLoading}
-        height='80'
-        width='80'
-        ariaLabel='magnifying-glass-loading'
-        wrapperStyle={{ width: '100%', height: '200px' }}
-        glassColor='#c0efff'
-        color='rgb(0, 128, 192)'
-      />
-
-      {canLoadMore && !isError && (
-        <button onClick={onLoadMore} className={css.loadBtn}>
-          Load more
-        </button>
+      {isLoading && (
+        <MagnifyingGlass
+          visible={true}
+          height='80'
+          width='80'
+          ariaLabel='magnifying-glass-loading'
+          wrapperStyle={{ width: '100%', height: '200px' }}
+          glassColor='#c0efff'
+          color='rgb(0, 128, 192)'
+        />
       )}
 
-      <Modal className={css.Modal} overlayClassName={css.Overlay} ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={handleCloseModal} contentLabel='Example Modal'>
-        <img src={modalImage} alt='' className={css.modalImage} onClick={handleCloseModal} />
-      </Modal>
+      {canLoadMore && !isError && <LoadMoreBtn onLoadMore={onLoadMore} />}
+
+      {modalIsOpen && <ImageModal modalImage={modalImage} handleCloseModal={handleCloseModal} />}
 
       <ToastContainer
         position='top-right'
